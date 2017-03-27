@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta charset="UTF-8">
+        
+    <style>
+        .btn {
+            width:200px;
+            height:40px;
+            background-color: #ff8040;
+            text-align:center;
+            border-radius: 5px;
+            border: 0px solid white;
+            color: white;
+            margin: 0px auto;
+            line-height: 40px;
+        }
+    </style>
+</html>
+<body>
+    <br/>
+    <br/>
+    <div style="text-align: center;color: #ccc">
+        <span>DDJSBridge Test</span>
+    </div>
+    <br/>
+    <div style = "margin: 10px auto;">
+        <div class = "btn" onclick="alertShow();">弹出框</div> <br/>
+        <div class = "btn" onclick="confirmShow()">确认框</div><br/>
+        <div class = "btn" onclick="promptShow()">弹出带输入</div><br/>
+        <div class = "btn" onclick="toastShow()">toast</div><br/>
+        <div class = "btn" onclick="hideTitleBar()">隐藏导航</div> <br/>
+        <div class = "btn" onclick="showTitleBar()">显示导航</div> <br/>
+        <div class = "btn" onclick="showNetworkType()">显示网络类型</div> <br/>
+        <div class = "btn" onclick="playVoice()">播放声音</div> <br/>
+        <div class = "btn" onclick="showUserInfo()">打开链接</div> <br/>
+        <div id = "native" style="text-align: center;color: #ccc"></div>
+    </div>
+    <script>
+        
+        
+    function init() {
+        DDJSBridge.call('showShareButton', {data:{icon:""}}) //http://test.c6img.sequ.biz/img/common/share.png
+        DDJSBridge.call('setTitle', {data: {title: "DDJSBridge"}})
+    }
+    
+    setTimeout("init()",100); // Bridge需要延时调用
+    
+    function alertShow(){
+        DDJSBridge.call('alert', {data: {title: '亲', message: '你好', button: '确定'}});
+    }
+    
+    function showTitleBar() {
+        DDJSBridge.call('showTitleBar')
+    }
+    
+    function hideTitleBar() {
+        DDJSBridge.call('hideTitleBar')
+    }
+    
+    function confirmShow() {
+        DDJSBridge.call('confirm', {data: {title: '亲', message: '确定要这么干吗？', okButton: '确定', cancelButton: '算了'}}, function(result) {
+            if(isJson(result)) {
+                if (result.ok) {
+                    document.getElementById("native").innerHTML = "点击了确定"
+                } else {
+                    document.getElementById("native").innerHTML = "点击了算了"
+                }
+                      
+            } else {
+                var result = eval("(" + result + ")")
+                if (result.ok) {
+                    document.getElementById("native").innerHTML = "点击了确定"
+                } else {
+                    document.getElementById("native").innerHTML = "点击了算了"
+                }
+            }
+                        
+        })
+    }
+    
+    function promptShow() {
+        DDJSBridge.call('prompt',{data:{title: '请输入标题', value: '默认值', placeholder: '请输入标题'}}, function(result) {
+                        if(isJson(result)) {
+                            if (result.ok) {
+                                var title = result.data
+                                DDJSBridge.call('setTitle', {data: {title: title}})
+                            }
+                        } else {
+                            var result = eval("(" + resultStr + ")")
+                            if (result.ok) {
+                                var title = result.data
+                                DDJSBridge.call('setTitle', {data: {title: title}})
+                            }
+                        }
+        })
+    }
+    
+    function toastShow() {
+        DDJSBridge.call('toast', {data: {position: 'center', message: '我是一条弱提示', duration: 1.5}})
+    }
+    
+    function showNetworkType() {
+        DDJSBridge.call('showNetWorkType',{}, function(result) {
+            if(isJson(result)) {
+                if (result.ok) {
+                    var type = result.data
+                    document.getElementById("native").innerHTML = "网络类型："+type
+                }
+            } else {
+                var result = eval("(" + result + ")")
+                if (result.ok) {
+                    var title = result.data
+                    DDJSBridge.call('setTitle', {data: {title: title}})
+                }
+            }
+        })
+    }
+                              
+    function playVoice() {
+        DDJSBridge.call('playVoice', {data:{resource_id:'id', url:''}})
+    }
+    
+    function showUserInfo() {
+        DDJSBridge.call('openUrl', {data:{new_window:true, url:'http://www.llbe.com.cn/JSBridge/test.htm', params: {id:'123'}}})
+    }
+    
+    function isJson(obj){
+        var isjson = typeof(obj) == "object" && Object.prototype.toString.call(obj).toLowerCase() == "[object object]" && !obj.length;
+        return isjson;
+    }
+    
+        </script>
+</body>
