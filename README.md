@@ -1,2 +1,2 @@
-# jSBridge-Swift
-jSBridge swift version base on JavaScriptCore
+# JSBridge-Swift
+JSBridge swift version base on JavaScriptCore
